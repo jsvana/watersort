@@ -84,7 +84,7 @@ def difficulty(vials):
 
 random.seed(7)
 
-# (num_colors, num_empty, count, shuffle_steps)
+# Visible levels: (num_colors, num_empty, count, shuffle_steps)
 configs = [
     (2, 2, 3, 6),
     (3, 2, 4, 10),
@@ -96,23 +96,40 @@ configs = [
     (9, 2, 3, 42),
 ]
 
-levels, lid = [], 1
-for nc, ne, cnt, sh in configs:
-    made = 0
-    attempts = 0
-    while made < cnt and attempts < 200:
-        attempts += 1
-        v = generate(nc, ne, sh)
-        if is_solved(v): continue
-        # verify with BFS for small levels
-        if nc <= 6:
-            ok = is_solvable(v)
-            if ok is False: continue
-        levels.append({"id": lid, "vials": v})
-        lid += 1
-        made += 1
+# Hidden ("blind") levels: only top color shown, gentler difficulty curve
+# since the player cannot plan ahead.
+hidden_configs = [
+    (3, 2, 3, 8),
+    (4, 2, 3, 12),
+    (5, 2, 2, 16),
+]
 
-with open('/home/claude/watersort/Levels.json', 'w') as f:
+def build_levels(start_id, configs_list, hidden):
+    out, lid = [], start_id
+    for nc, ne, cnt, sh in configs_list:
+        made = 0
+        attempts = 0
+        while made < cnt and attempts < 200:
+            attempts += 1
+            v = generate(nc, ne, sh)
+            if is_solved(v): continue
+            if nc <= 6:
+                ok = is_solvable(v)
+                if ok is False: continue
+            entry = {"id": lid, "vials": v}
+            if hidden:
+                entry["hidden"] = True
+            out.append(entry)
+            lid += 1
+            made += 1
+    return out
+
+levels = build_levels(1, configs, hidden=False)
+levels += build_levels(len(levels) + 1, hidden_configs, hidden=True)
+
+import os
+out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Levels.json')
+with open(out_path, 'w') as f:
     json.dump({"levels": levels}, f, indent=2)
 
 # print summary

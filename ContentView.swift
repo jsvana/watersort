@@ -100,6 +100,7 @@ struct ContentView: View {
                                 vial: game.vials[idx],
                                 capacity: GameState.vialCapacity,
                                 isSelected: game.selectedVial == idx,
+                                hidden: game.currentLevel?.isHidden ?? false,
                                 onTap: { game.tap(vial: idx) }
                             )
                         } else {

@@ -25,6 +25,11 @@ final class GameState {
         startLevel(currentLevelIndex)
     }
 
+    var currentLevel: Level? {
+        guard currentLevelIndex >= 0, currentLevelIndex < levels.count else { return nil }
+        return levels[currentLevelIndex]
+    }
+
     func isSolved(levelIndex: Int) -> Bool {
         guard levelIndex >= 0, levelIndex < levels.count else { return false }
         return solvedLevelIds.contains(levels[levelIndex].id)
@@ -48,7 +53,7 @@ final class GameState {
             let pack = try? JSONDecoder().decode(LevelPack.self, from: data)
         else {
             // Fallback so the app still launches if the bundle is misconfigured.
-            levels = [Level(id: 1, vials: [[0, 0, 1, 1], [1, 1, 0, 0], [], []])]
+            levels = [Level(id: 1, vials: [[0, 0, 1, 1], [1, 1, 0, 0], [], []], hidden: false)]
             return
         }
         levels = pack.levels

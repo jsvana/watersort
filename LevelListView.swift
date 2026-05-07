@@ -62,6 +62,14 @@ struct LevelListView: View {
                         .foregroundStyle(Color(hex: 0x06D6A0))
                         .padding(6)
                 }
+
+                if level.isHidden {
+                    Image(systemName: "eye.slash.fill")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(Color(hex: 0xF4A300))
+                        .padding(6)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                }
             }
         }
         .buttonStyle(.plain)
