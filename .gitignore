@@ -1,0 +1,12 @@
+# Xcode
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
+build/
+
+# Python
+__pycache__/
+*.pyc
+
+# Claude Code
+.claude/settings.local.json
